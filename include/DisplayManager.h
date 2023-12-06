@@ -28,16 +28,17 @@ class DisplayManager {
 
         void initWindow();
 
-        void onPressureChanged(const DataPoint& dataPointReceived);
+        void onPressureChanged(const DataPointEncoded& dataPointReceived);
 
         virtual ~DisplayManager();
 
     private:
 
         void DisplayThread();
-        std::vector<float> m_BPData = {};
+        void writeCSV(const std::string& filename, const std::vector<std::vector<float>*>& measurements);
+        std::vector<std::vector<float>*> measurementsVec = {};
+        std::vector<float> m_BPData_mBar = {};
+        std::vector<float> m_TempData_Celsius = {};
         std::unique_ptr<std::thread> displayWindowThread {nullptr};
-
-
 };
 

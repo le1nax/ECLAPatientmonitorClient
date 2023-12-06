@@ -65,7 +65,7 @@ void SocketClient::ProcessPacket(char* buffer)
     std::cout << "finished ProcessPacket" << std::endl;
 }
 
-void SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
+char* SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
 {
     Receive_State state;
     WSADATA wsaData;
@@ -98,7 +98,7 @@ void SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
     if (state.overlapped.hEvent == NULL) {
     wprintf(L"WSACreateEvent failed with error: %d\n", WSAGetLastError());
     WSACleanup();
-    return;
+    return buffer1;
     }
     
 
@@ -125,7 +125,7 @@ void SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
         WSACloseEvent(state.overlapped.hEvent);
         closesocket(sock);
         WSACleanup();
-        return;
+        return buffer1;
     }
     else {
         rc = WSAWaitForMultipleEvents(1, &state.overlapped.hEvent, TRUE, INFINITE, TRUE);
@@ -155,6 +155,7 @@ void SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
         
         wprintf(L"Finished receiving.\n");
         cout << "Message recv: " << DataBuf.buf << endl;
+        return(state.wsaBuf.buf);
     }
     
     }
@@ -170,7 +171,7 @@ void SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
     // WSACleanup();
     m_lastMsg = state.wsaBuf.buf;
     lastMsgSize = state.wsaBuf.len;
-    return;
+    return state.wsaBuf.buf;
 }
 
 

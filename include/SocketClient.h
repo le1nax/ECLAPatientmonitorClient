@@ -23,7 +23,7 @@ class SocketClient : public UDPSocket {
         void initReceive();
         
         sockaddr_in m_sa_remoteIPtarget;
-        void Receive(char* buffer, size_t buffersize = maxbuffersize, int flags = 0);
+        char* Receive(char* buffer, size_t buffersize = maxbuffersize, int flags = 0);
 
         std::vector<std::byte> init_msg;
     private:

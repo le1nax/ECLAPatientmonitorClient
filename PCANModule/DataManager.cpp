@@ -13,10 +13,10 @@ DataManager::DataManager()
 	file << std::endl;
 	file << "Start of Measurement:" << std::endl;
 	file << std::endl;
-	setCallback(std::bind(&DisplayManager::onPressureChanged, dispManager, std::placeholders::_1));
+	// setCallback(std::bind(&DisplayManager::onPressureChanged, dispManager, std::placeholders::_1));
 }
 
-bool DataManager::sendData(const DataPoint& data)
+bool DataManager::sendData(const DataPointEncoded& data)
 {
 	dispManager->onPressureChanged(data);
 	// receiveData(data);
@@ -26,12 +26,6 @@ bool DataManager::sendData(const DataPoint& data)
 	// }
 	return true;
 }
-
-bool DataManager::sendDataUdp(const DataPoint& dataPoint)
-{
-	
-}
-
 
 bool DataManager::endSending()
 {

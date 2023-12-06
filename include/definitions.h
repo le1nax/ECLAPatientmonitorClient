@@ -24,6 +24,8 @@ static constexpr size_t valuebuffersize = sizeof(int32_t);
 static constexpr size_t beaconbuffersize = sizeof(uint8_t);
 static constexpr size_t timestampbuffersize = sizeof(uint16_t);
 static constexpr size_t counterbuffersize = beaconbuffersize;
+static constexpr double canPressConversionFactor = 1e-2;
+static constexpr double canTempConversionFactor = 1e-2;
 
 enum class DataPointType 
 {
@@ -33,9 +35,27 @@ enum class DataPointType
     DEBUG = 3
 };
 
+enum class EnumCanID
+{
+    PRESS = 0x102A0010, 
+    TEMP = 0x102A0020, 
+    CONFIG = 2,
+    DEBUG = 3
+};
+
+
 template<typename... Ts>
 std::vector<std::byte> make_bytes(Ts&&... args) noexcept {
 return{std::byte(std::forward<Ts>(args))...};
+}
+
+static void swapEndianness(char* buffer, size_t size) {
+    for (size_t i = 0; i < size / 2; ++i) {
+        // Swap bytes using XOR
+        buffer[i] ^= buffer[size - i - 1];
+        buffer[size - i - 1] ^= buffer[i];
+        buffer[i] ^= buffer[size - i - 1];
+    }
 }
 
 static void readBytesFromArray(const char* array, size_t numBytes) {
