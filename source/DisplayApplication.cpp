@@ -41,11 +41,15 @@ void DisplayApplication::run()
         std::unique_ptr<SocketClient> client = std::make_unique<SocketClient>(s_remoteIP, remotePort);
 
         client->establishLanConnection();
-        std::cout << "sent" << std::endl;
+        if(configModeDebug) {
+             std::cout << "sent" << std::endl;
+        }
         // std::cin.get();// Wait for user input before exiting
         dispManager.initWindow();
         char* buffer;
-        std::cout << "begin receive" << std::endl;
+        if(configModeDebug) { 
+            std::cout << "begin receive" << std::endl;
+        }
 
         while(true)
         {
@@ -54,17 +58,23 @@ void DisplayApplication::run()
             DataPointEncoded encoded;
             int32_t valDebug;
             memcpy(&encoded, buffer, size_encoded);
-            std::cout << "canID extracted: " << int(encoded.canID) << std::endl;
-            std::cout << "timestamp extracted: " << int(encoded.timestamp) << std::endl;   
-            std::cout << "value extracted: " << int(encoded.value) << std::endl;
-            std::cout << "pcantime extracted: " << int(encoded.pcanTimestamp) << std::endl;  
-            // std::cout << "value extracted: " << valDebug << std::endl;
+            // if(configModeDebug) { std::cout << "canID extracted: " << int(encoded.canID) << std::endl;
+            // if(configModeDebug) { std::cout << "timestamp extracted: " << int(encoded.timestamp) << std::endl;   
+            // if(configModeDebug) { std::cout << "value extracted: " << int(encoded.value) << std::endl;
+            if(configModeDebug) { 
+                std::cout << "pcantime extracted: " << std::to_string(encoded.pcanTimestamp) << std::endl;  
+            }
+            // if(configModeDebug) { std::cout << "value extracted: " << valDebug << std::endl;
             dispManager.onPressureChanged(encoded);
         }
     }
     catch (std::exception &ex) //catch any occurring system errors
     {
-        std::cout << ex.what();  //print error message
+        if(configModeDebug) { 
+            std::cout << ex.what();  //print error message
+        }
     }
-	std::cout << "return to main end" << std::endl;
+	if(configModeDebug) { 
+        std::cout << "return to main end" << std::endl;
+    }
 }

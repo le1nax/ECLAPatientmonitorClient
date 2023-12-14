@@ -23,7 +23,10 @@ public:
     // Function to handle the data received from Class A
     void processData(const std::string& data) {
         // Processing logic for the received data
-        std::cout << "Class B is processing data: " << data << std::endl;
+        if(configModeDebug) 
+        { 
+            std::cout << "Class B is processing data: " << data << std::endl;
+        }
     }
 };
 

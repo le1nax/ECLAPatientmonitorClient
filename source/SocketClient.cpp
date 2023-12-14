@@ -42,7 +42,9 @@ SocketClient::SocketClient(std::string remoteIPtarget, const unsigned short remo
     );
 
 
-    std::cout << "Created and initialised client" << std::endl;
+    if(configModeDebug) { 
+        std::cout << "Created and initialised client" << std::endl;
+    }
 }
 
 SOCKET SocketClient::getSocket()
@@ -62,7 +64,9 @@ void SocketClient::sendBytes(vector<std::byte> bytes)
 
 void SocketClient::ProcessPacket(char* buffer)
 {
-    std::cout << "finished ProcessPacket" << std::endl;
+    if(configModeDebug) { 
+        std::cout << "finished ProcessPacket" << std::endl;
+    }
 }
 
 char* SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
@@ -96,7 +100,10 @@ char* SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
     // Create an event handle and setup the overlapped structure.
     state.overlapped.hEvent = WSACreateEvent();
     if (state.overlapped.hEvent == NULL) {
-    wprintf(L"WSACreateEvent failed with error: %d\n", WSAGetLastError());
+        if(configModeDebug)
+    {
+        wprintf(L"WSACreateEvent failed with error: %d\n", WSAGetLastError());
+    }
     WSACleanup();
     return buffer1;
     }
@@ -109,7 +116,11 @@ char* SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
     std::string targetip = m_remoteIPtarget; 
     inet_pton(AF_INET, targetip.c_str(), &(m_sa_remoteIPtarget.sin_addr));
 
-    wprintf(L"Listening for incoming datagrams on port=%d\n", m_port);
+    if(configModeDebug)
+    {
+        wprintf(L"Listening for incoming datagrams on port=%d\n", m_port);
+    }
+    
     rc = WSARecvFrom(sock,
               &state.wsaBuf,
               1,
@@ -148,13 +159,16 @@ char* SocketClient::Receive(char* buffer1, size_t buffersize, int flags)
 			    // Receive operation completed successfully
 			    ReceiveCallback(0, state.numBytesReceived, &state.overlapped); //go and process data
         }
-        wprintf(L"Number of received bytes = %d\n", state.numBytesReceived);
+        if(configModeDebug){
+            wprintf(L"Number of received bytes = %d\n", state.numBytesReceived);
+        }
         readBytesFromArray(state.wsaBuf.buf, state.numBytesReceived);
 
         }
-        
-        wprintf(L"Finished receiving.\n");
-        cout << "Message recv: " << DataBuf.buf << endl;
+        if(configModeDebug){
+            wprintf(L"Finished receiving.\n");
+            cout << "Message recv: " << DataBuf.buf << endl;
+        }
         return(state.wsaBuf.buf);
     }
     
@@ -206,7 +220,9 @@ void CALLBACK SocketClient::ReceiveCallback(DWORD errorCode, DWORD numBytesRecei
     bool writing_to_file_successful = ByteArrayToFile(path_to_file, receivedData);
 	        // B: bool writing_to_file_successful2 = ByteArrayToFile(path_to_file, data_bytes, numBytesReceived);
 */
-    std::cout << "now processing packet" << std::endl;
+    if(configModeDebug) {
+        std::cout << "now processing packet" << std::endl;
+    }
     //ProcessPacket(state.wsaBuf.buf);
 
     }
@@ -237,7 +253,7 @@ void SocketClient::onThreadReceive()
     char receivedBuffer[16];
     Receive(receivedBuffer);
     ProcessPacket(receivedBuffer);
-    std::this_thread::sleep_for(std::chrono::milliseconds(m_receiveInterval));
+    //std::this_thread::sleep_for(std::chrono::milliseconds(m_receiveInterval));
     }
 }
 

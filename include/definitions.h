@@ -19,6 +19,7 @@
 #include <WS2tcpip.h>
 #include "imgui.h"
 
+static constexpr bool configModeDebug = false;
 static constexpr size_t maxbuffersize = 2001;
 static constexpr size_t valuebuffersize = sizeof(int32_t);
 static constexpr size_t beaconbuffersize = sizeof(uint8_t);
@@ -37,8 +38,9 @@ enum class DataPointType
 
 enum class EnumCanID
 {
-    PRESS = 0x102A0010, 
-    TEMP = 0x102A0020, 
+    PRESS =     0x102A0010, 
+    TEMP =      0x102A0020,
+    SFM3300 =   0x102A0060, 
     CONFIG = 2,
     DEBUG = 3
 };
@@ -60,9 +62,11 @@ static void swapEndianness(char* buffer, size_t size) {
 
 static void readBytesFromArray(const char* array, size_t numBytes) {
     for (size_t i = 0; i < numBytes; ++i) {
-        std::cout << std::hex << static_cast<int>(static_cast<uint8_t>(array[i])) << " ";
+        if(configModeDebug) {
+            std::cout << std::hex << static_cast<int>(static_cast<uint8_t>(array[i])) << " ";
+            std::cout << std::endl;
+        }
     }
-    std::cout << std::endl;
 }
 
 static std::string ReplaceNullCharacters(const std::string& inputString) {
@@ -145,7 +149,7 @@ static std::string formatTm(const struct tm& timeInfo) {
 
 // Function to plot a std::vector<int>
 static void PlotVector(const char* label, const std::vector<float>& values) {
-
+    
     ImGui::PlotLines(label, values.data(), static_cast<int>(values.size()), 0, nullptr, FLT_MIN, FLT_MAX, ImVec2(0, 80));
 }
 

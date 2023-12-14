@@ -18,7 +18,6 @@ using namespace std;
 // Include the Winsock library (lib) file
 #pragma comment (lib, "ws2_32.lib")
 
-// Saves us from typing std::cout << etc. etc. etc.
 using namespace std; 
 
 // Main entry point into the server
@@ -107,7 +106,10 @@ int main()
 			ZeroMemory(buffer1, MAX_BUFFER_SIZE); // Clear the receive buffer
 			lpwsabufferServer->buf = buffer1;
 
-			std::cout << "server waiting to receive" << std::endl;
+			if(configModeDebug) 
+			{
+				 std::cout << "server waiting to receive" << std::endl;
+			}
 						// Receive from Client
 			if (WSARecvFrom(serverSocket, lpwsabufferServer, 1, &bytesReceived1, &flags2,
 							reinterpret_cast<sockaddr*>(&clientRecv), reinterpret_cast<LPINT>(&clientRecvLength), nullptr, nullptr) == SOCKET_ERROR)

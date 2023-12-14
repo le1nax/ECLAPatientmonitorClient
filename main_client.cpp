@@ -48,7 +48,7 @@ int main()
     // int ans = 0;
     // //ans = ReadByteValuesFromBuffer(buffer, 0, 3);
     // ans = Read16ByteValuesFromBuffer(buffer, 0);
-    // std::cout << ans << std::endl;
+    // if(configModeDebug) { std::cout << ans << std::endl;
     return 0;
 }
 // static uint16_t Read16ByteValuesFromBuffer(const char* buffer, size_t startIndex) {
@@ -73,15 +73,15 @@ int main()
 //         unique_ptr<SocketClient> client = make_unique<SocketClient>(s_remoteIP, remotePort);
 
 //         client->SendWaveAssociationRequest();
-//         std::cout << "sent" << std::endl;
+//         if(configModeDebug) { std::cout << "sent" << std::endl;
 //         // std::cin.get();// Wait for user input before exiting
 //         char buffer[maxbuffersize];
-//         std::cout << "begin receive" << std::endl;
+//         if(configModeDebug) { std::cout << "begin receive" << std::endl;
 //         client->Receive(buffer);
 //     }
 //     catch (std::exception &ex) //catch any occurring system errors
 //     {
-//         std::cout << ex.what();  //print error message
+//         if(configModeDebug) { std::cout << ex.what();  //print error message
 //     }
 //     return 0;
 // }

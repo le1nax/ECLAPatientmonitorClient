@@ -32,9 +32,11 @@ void DisplayManager::onPressureChanged(const DataPointEncoded& dataPointReceived
     case EnumCanID::TEMP:
         m_TempData_Celsius.push_back(readData*canTempConversionFactor);
         break;
-    
+    case EnumCanID::SFM3300:
+        m_FlowData_mBar.push_back(readData*canPressConversionFactor);
+
     default:
-        std::cout << "Invalid canID: " << dataPointReceived.canID << std::endl;
+        std::cout <<  "Invalid canID: " << dataPointReceived.canID << std::endl;
         break;
     }
 }
@@ -56,7 +58,9 @@ void DisplayManager::writeCSV(const std::string& filename, const std::vector<std
 
     for (size_t i = 0; i < minSize; ++i) {
         for (const auto& vec : data) {
-            std::cout << "rowValue: " << vec->at(i) << std::endl;
+            if(configModeDebug){ 
+                std::cout <<  "rowValue: " << vec->at(i) << std::endl;
+            }
             file << vec->at(i) << ","; //write content of vec into csv
         }
         file << "\n"; // next row
@@ -64,8 +68,7 @@ void DisplayManager::writeCSV(const std::string& filename, const std::vector<std
 
     // Close the file
     file.close();
-
-    std::cout << "CSV file created: " << filename << std::endl;
+         std::cout <<  "CSV file created: " << filename << std::endl;
 }
 
 void convertToMat(const std::string& csvFilename, const std::string& matFilename) {
@@ -104,7 +107,8 @@ void convertToMat(const std::string& csvFilename, const std::string& matFilename
     // matPutVariable(matFile, varName, mxData);
     // matClose(matFile);
 
-    // std::cout << "MAT file created: " << matFilename << std::endl;
+    // if(configModeDebug){ 
+        //std::cout <<  "MAT file created: " << matFilename << std::endl;
 }
 
 

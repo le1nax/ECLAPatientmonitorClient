@@ -10,7 +10,10 @@ struct Foo {
 class Handler {
 public:
     void handlerFunc(const Foo& fooReceived) {
-        std::cout << "Handler received Foo with data: " << fooReceived.data << std::endl;
+        if(configModeDebug) 
+        {
+             std::cout << "Handler received Foo with data: " << fooReceived.data << std::endl;
+        }
         // Add your handling logic here
     }
 };

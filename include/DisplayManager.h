@@ -39,6 +39,9 @@ class DisplayManager {
         std::vector<std::vector<float>*> measurementsVec = {};
         std::vector<float> m_BPData_mBar = {};
         std::vector<float> m_TempData_Celsius = {};
+        std::vector<float> m_FlowData_mBar = {};
         std::unique_ptr<std::thread> displayWindowThread {nullptr};
+
+        uint64_t countMsgReceived = 0;
 };
 
