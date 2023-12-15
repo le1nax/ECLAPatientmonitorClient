@@ -4,9 +4,9 @@ cmake_minimum_required (VERSION 3.5)
 include(FindPkgConfig)
 
 set(CMAKE_TOOLCHAIN_FILE "C:/src/vcpkg/scripts/buildsystems/vcpkg.cmake")
-set(CMAKE_LIBRARY_PATH "C:/Program Files/MATLAB/R2023b/extern/lib/win64/mingw64")
+# set(CMAKE_LIBRARY_PATH "C:/Program Files/MATLAB/R2023b/extern/lib/win64/mingw64")
 
-set(Matlab_ROOT_DIR "C:/Program Files/MATLAB/R2023b" CACHE PATH "Path to MATLAB installation")
+# set(Matlab_ROOT_DIR "C:/Program Files/MATLAB/R2023b" CACHE PATH "Path to MATLAB installation")
 
 set(VCPKG_TARGET_TRIPLET "x64-mingw-static")
 set(VCPKG_HOST_TRIPLET "x64-mingw-static")
@@ -28,8 +28,8 @@ find_package(implot CONFIG REQUIRED)
 find_package(Threads REQUIRED)
 find_package(pcanbasic REQUIRED) 
 find_package(OpenGL)
-find_package(Matlab REQUIRED)
-include_directories(${Matlab_INCLUDE_DIRS})
+# find_package(Matlab REQUIRED)
+# include_directories(${Matlab_INCLUDE_DIRS})
 
 file(GLOB_RECURSE SOURCE_FILES "source/*.cpp" "PCANModule/*.cpp")
 add_executable(ECLA_PM "main.cpp" ${SOURCE_FILES})
@@ -42,7 +42,7 @@ target_include_directories(ECLA_PM PRIVATE ${pcanbasic_INCLUDE_DIR})
 
 if (imgui_FOUND)
   target_link_libraries(ECLA_PM ${OPENGL_gl_LIBRARY}
-                                ${Matlab_MX_LIBRARY} ${Matlab_MAT_LIBRARY}
+                                # ${Matlab_MX_LIBRARY} ${Matlab_MAT_LIBRARY}
                                 # "C:/Program Files/MATLAB/R2023b/extern/lib/win64/microsoft/libmat.lib"
                                pcanbasic::pcanbasic
                                imgui::imgui

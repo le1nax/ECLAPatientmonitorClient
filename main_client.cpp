@@ -1,89 +1,48 @@
-﻿#include "include/SocketClient.h"
-#include "include/Program.h"
+﻿#include <iostream>
+#include <Winsock2.h>
 
-#include <string.h>
-#include <thread>
-#include <iostream>
-#include <chrono>
+#pragma comment(lib, "ws2_32.lib")
 
-#include <imgui.h>
-#include <stdio.h>
-
-
-
-#pragma comment (lib, "ws2_32.lib")
-
-#define REMOTEIP "169.254.0.1"
-#define REMOTEPORT 24105
-
-#define LOCALIP "127.0.0.1"
-#define LOCALPORT 69696
-
-#define MAX_BUFFER_SIZE 2001
-
-using namespace std;
-
-uint16_t extractNumber(const char* charArray);
-uint16_t convertBigEndianToLittleEndian(const char* charArray);
-int main()
-{
-    try
-   {
-        unique_ptr<WSASession> Session = make_unique<WSASession>();
-
-        const std::string s_remoteIP = REMOTEIP;
-        const unsigned short remotePort = REMOTEPORT;
-        unique_ptr<SocketClient> client = make_unique<SocketClient>(s_remoteIP, remotePort);
-
-        client->establishLanConnection();
-    }
-    catch (std::exception &ex) //catch any occurring system errors
-    {
-        std::cout << ex.what();  //print error message
+int main() {
+    // Initialize Winsock
+    WSADATA wsaData;
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        std::cerr << "WSAStartup failed.\n";
+        return 1;
     }
 
-    std::cin.get();
+    // Create socket
+    SOCKET udpSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+    if (udpSocket == INVALID_SOCKET) {
+        std::cerr << "Error creating socket: " << WSAGetLastError() << std::endl;
+        WSACleanup();
+        return 1;
+    }
 
-    // const char* buffer = "\x04\x01";
-    // int ans = 0;
-    // //ans = ReadByteValuesFromBuffer(buffer, 0, 3);
-    // ans = Read16ByteValuesFromBuffer(buffer, 0);
-    // if(configModeDebug) { std::cout << ans << std::endl;
+    // Bind socket to a port
+    sockaddr_in serverAddr;
+    serverAddr.sin_family = AF_INET;
+    serverAddr.sin_port = htons(12345);  // Use the same port as in Device A
+    serverAddr.sin_addr.s_addr = INADDR_ANY;
+
+    if (bind(udpSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == SOCKET_ERROR) {
+        std::cerr << "Bind failed with error: " << WSAGetLastError() << std::endl;
+        closesocket(udpSocket);
+        WSACleanup();
+        return 1;
+    }
+
+    // Receive data
+    char buffer[1024];
+    int recvBytes = recv(udpSocket, buffer, sizeof(buffer), 0);
+    if (recvBytes > 0) {
+        buffer[recvBytes] = '\0';
+        std::cout << "Received message: " << buffer << std::endl;
+    }
+
+    // Clean up
+    closesocket(udpSocket);
+    WSACleanup();
+
     return 0;
 }
-// static uint16_t Read16ByteValuesFromBuffer(const char* buffer, size_t startIndex) {
-//     uint16_t number = 0;
-//     const char* buffer1 = buffer;
-
-//     for (size_t i = startIndex; i < uInt16Size+startIndex; ++i) {
-//         number = (number << 8) | static_cast<uint16_t>(buffer1[i]);
-//     }
-//     return number;
-// }
-
-
-// int main()
-// {
-//     try
-//    {
-//         unique_ptr<WSASession> Session = make_unique<WSASession>();
-
-//         const std::string s_remoteIP = LOCALIP;
-//         const unsigned short remotePort = LOCALPORT;
-//         unique_ptr<SocketClient> client = make_unique<SocketClient>(s_remoteIP, remotePort);
-
-//         client->SendWaveAssociationRequest();
-//         if(configModeDebug) { std::cout << "sent" << std::endl;
-//         // std::cin.get();// Wait for user input before exiting
-//         char buffer[maxbuffersize];
-//         if(configModeDebug) { std::cout << "begin receive" << std::endl;
-//         client->Receive(buffer);
-//     }
-//     catch (std::exception &ex) //catch any occurring system errors
-//     {
-//         if(configModeDebug) { std::cout << ex.what();  //print error message
-//     }
-//     return 0;
-// }
-
-

@@ -19,7 +19,7 @@
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 
-#define LOCALIP "127.0.0.1"
+#define LOCALIP "134.61.68.44"
 #define LOCALPORT 12345
 
 
