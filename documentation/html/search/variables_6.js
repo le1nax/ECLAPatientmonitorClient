@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['handle_0',['handle',['../struct_glb_handle.html#a0cf24ec54b85d9f73567a0bcf6ad9768',1,'GlbHandle']]],
-  ['hour_1',['hour',['../struct_absolute_time.html#a7ca84c89373702fa65d5767355c4a4f4',1,'AbsoluteTime']]]
+  ['overlapped_0',['overlapped',['../class_receive___state.html#a5d46d932827f8e09fe826b61f424306e',1,'Receive_State']]]
 ];

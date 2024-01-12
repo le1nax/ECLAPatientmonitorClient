@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['initmsgs_0',['initMsgs',['../class_socket_client.html#a3cb21cf1a1709e329c7254ad22d73f2e',1,'SocketClient']]],
-  ['islittleendian_1',['IsLittleEndian',['../class_socket_client.html#a5ee8ec1e5409055dac62b91750ef7da3',1,'SocketClient']]]
+  ['onpressurechanged_0',['onPressureChanged',['../class_display_manager.html#aa4626a52bb4a54c7b9ca6d35a4555d8d',1,'DisplayManager']]],
+  ['operator_3d_1',['operator=',['../class_display_manager.html#a1655d63970f03fc4cb575a4629acf6c0',1,'DisplayManager::operator=(const DisplayManager &amp;)=delete'],['../class_display_manager.html#adfc19700f2522d7a1663e508616e24cd',1,'DisplayManager::operator=(DisplayManager &amp;&amp;)=delete']]]
 ];

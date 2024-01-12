@@ -9,6 +9,7 @@ DisplayManager::DisplayManager()
     //add every measurement stream to vector
     measurementsVec.push_back(&m_BPData_mBar);
     measurementsVec.push_back(&m_TempData_Celsius);
+    measurementsVec.push_back(&m_FlowData_mBar);
     
 }
 
@@ -68,7 +69,7 @@ void DisplayManager::writeCSV(const std::string& filename, const std::vector<std
 
     // Close the file
     file.close();
-         std::cout <<  "CSV file created: " << filename << std::endl;
+    std::cout <<  "CSV file created: " << filename << std::endl;
 }
 
 void convertToMat(const std::string& csvFilename, const std::string& matFilename) {
@@ -110,6 +111,7 @@ void convertToMat(const std::string& csvFilename, const std::string& matFilename
     // if(configModeDebug){ 
         //std::cout <<  "MAT file created: " << matFilename << std::endl;
 }
+
 
 
 void DisplayManager::DisplayThread()
@@ -175,6 +177,12 @@ void DisplayManager::DisplayThread()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
     glfwTerminate();
+}
+
+
+void DisplayManager::PlotVector(const char* label, const std::vector<float>& values) {
+    
+    ImGui::PlotLines(label, values.data(), static_cast<int>(values.size()), 0, nullptr, FLT_MIN, FLT_MAX, ImVec2(0, 80));
 }
 
 

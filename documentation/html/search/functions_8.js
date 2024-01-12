@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['keepconnectionalive_0',['KeepConnectionAlive',['../class_socket_client.html#a537146057b3c27487f4b6d2039e60012',1,'SocketClient']]]
+  ['plotvector_0',['PlotVector',['../class_display_manager.html#a30e4d22e592e1e25573fee7f76b7adc2',1,'DisplayManager']]]
 ];

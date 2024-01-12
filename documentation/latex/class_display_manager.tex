@@ -1,0 +1,115 @@
+\doxysection{Display\+Manager Class Reference}
+\hypertarget{class_display_manager}{}\label{class_display_manager}\index{DisplayManager@{DisplayManager}}
+
+
+{\ttfamily \#include $<$Display\+Manager.\+h$>$}
+
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_display_manager_aaa4cbf192d2e50fde0064472243558e9}{Display\+Manager}} ()
+\begin{DoxyCompactList}\small\item\em constructor of the \doxylink{class_display_manager}{Display\+Manager}, in which the measurement vectors are filled on runtime \end{DoxyCompactList}\item 
+\mbox{\hyperlink{class_display_manager_a944d281a71409248f717f160f7b44bc1}{Display\+Manager}} (const \mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&)=delete
+\item 
+\mbox{\hyperlink{class_display_manager}{Display\+Manager}} \& \mbox{\hyperlink{class_display_manager_a1655d63970f03fc4cb575a4629acf6c0}{operator=}} (const \mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&)=delete
+\item 
+\mbox{\hyperlink{class_display_manager_a2fa5cf0af410704a14544086d00862a2}{Display\+Manager}} (\mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&\&)=delete
+\item 
+\mbox{\hyperlink{class_display_manager}{Display\+Manager}} \& \mbox{\hyperlink{class_display_manager_adfc19700f2522d7a1663e508616e24cd}{operator=}} (\mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&\&)=delete
+\item 
+void \mbox{\hyperlink{class_display_manager_ab019a8cce8c5f31d6bfd6b84837cbcb4}{init\+Window}} ()
+\begin{DoxyCompactList}\small\item\em initializes the Im\+Gui Window \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_display_manager_a30e4d22e592e1e25573fee7f76b7adc2}{Plot\+Vector}} (const char \texorpdfstring{$\ast$}{*}label, const std\+::vector$<$ float $>$ \&values)
+\begin{DoxyCompactList}\small\item\em Custom IO function, that plots the measurement vector. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{class_display_manager_aa4626a52bb4a54c7b9ca6d35a4555d8d}{on\+Pressure\+Changed}} (const \mbox{\hyperlink{struct_data_point_encoded}{Data\+Point\+Encoded}} \&data\+Point\+Received)
+\begin{DoxyCompactList}\small\item\em The slot which handles the incoming \doxylink{class_data_point}{Data\+Point}. \end{DoxyCompactList}\item 
+virtual \mbox{\hyperlink{class_display_manager_ae4c9d79e08490e64602cf562a16d8834}{\texorpdfstring{$\sim$}{\string~}\+Display\+Manager}} ()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\Hypertarget{class_display_manager_aaa4cbf192d2e50fde0064472243558e9}\label{class_display_manager_aaa4cbf192d2e50fde0064472243558e9} 
+\index{DisplayManager@{DisplayManager}!DisplayManager@{DisplayManager}}
+\index{DisplayManager@{DisplayManager}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{DisplayManager()}{DisplayManager()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Display\+Manager\+::\+Display\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+constructor of the \doxylink{class_display_manager}{Display\+Manager}, in which the measurement vectors are filled on runtime 
+
+\Hypertarget{class_display_manager_a944d281a71409248f717f160f7b44bc1}\label{class_display_manager_a944d281a71409248f717f160f7b44bc1} 
+\index{DisplayManager@{DisplayManager}!DisplayManager@{DisplayManager}}
+\index{DisplayManager@{DisplayManager}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{DisplayManager()}{DisplayManager()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Display\+Manager\+::\+Display\+Manager (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_display_manager_a2fa5cf0af410704a14544086d00862a2}\label{class_display_manager_a2fa5cf0af410704a14544086d00862a2} 
+\index{DisplayManager@{DisplayManager}!DisplayManager@{DisplayManager}}
+\index{DisplayManager@{DisplayManager}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{DisplayManager()}{DisplayManager()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Display\+Manager\+::\+Display\+Manager (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&\&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_display_manager_ae4c9d79e08490e64602cf562a16d8834}\label{class_display_manager_ae4c9d79e08490e64602cf562a16d8834} 
+\index{DisplayManager@{DisplayManager}!````~DisplayManager@{\texorpdfstring{$\sim$}{\string~}DisplayManager}}
+\index{````~DisplayManager@{\texorpdfstring{$\sim$}{\string~}DisplayManager}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{\texorpdfstring{$\sim$}{\string~}DisplayManager()}{\string~DisplayManager()}}
+{\footnotesize\ttfamily Display\+Manager\+::\texorpdfstring{$\sim$}{\string~}\+Display\+Manager (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [virtual]}}
+
+
+
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_display_manager_ab019a8cce8c5f31d6bfd6b84837cbcb4}\label{class_display_manager_ab019a8cce8c5f31d6bfd6b84837cbcb4} 
+\index{DisplayManager@{DisplayManager}!initWindow@{initWindow}}
+\index{initWindow@{initWindow}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{initWindow()}{initWindow()}}
+{\footnotesize\ttfamily void Display\+Manager\+::init\+Window (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+initializes the Im\+Gui Window 
+
+\Hypertarget{class_display_manager_aa4626a52bb4a54c7b9ca6d35a4555d8d}\label{class_display_manager_aa4626a52bb4a54c7b9ca6d35a4555d8d} 
+\index{DisplayManager@{DisplayManager}!onPressureChanged@{onPressureChanged}}
+\index{onPressureChanged@{onPressureChanged}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{onPressureChanged()}{onPressureChanged()}}
+{\footnotesize\ttfamily void Display\+Manager\+::on\+Pressure\+Changed (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{struct_data_point_encoded}{Data\+Point\+Encoded}} \&}]{data\+Point\+Received }\end{DoxyParamCaption})}
+
+
+
+The slot which handles the incoming \doxylink{class_data_point}{Data\+Point}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data\+Point\+Received} & Encoded \doxylink{class_data_point}{Data\+Point} that is handled \\
+\hline
+\end{DoxyParams}
+\Hypertarget{class_display_manager_a1655d63970f03fc4cb575a4629acf6c0}\label{class_display_manager_a1655d63970f03fc4cb575a4629acf6c0} 
+\index{DisplayManager@{DisplayManager}!operator=@{operator=}}
+\index{operator=@{operator=}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_display_manager}{Display\+Manager}} \& Display\+Manager\+::operator= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_display_manager_adfc19700f2522d7a1663e508616e24cd}\label{class_display_manager_adfc19700f2522d7a1663e508616e24cd} 
+\index{DisplayManager@{DisplayManager}!operator=@{operator=}}
+\index{operator=@{operator=}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{operator=()}{operator=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{class_display_manager}{Display\+Manager}} \& Display\+Manager\+::operator= (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_display_manager}{Display\+Manager}} \&\&}]{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [delete]}}
+
+\Hypertarget{class_display_manager_a30e4d22e592e1e25573fee7f76b7adc2}\label{class_display_manager_a30e4d22e592e1e25573fee7f76b7adc2} 
+\index{DisplayManager@{DisplayManager}!PlotVector@{PlotVector}}
+\index{PlotVector@{PlotVector}!DisplayManager@{DisplayManager}}
+\doxysubsubsection{\texorpdfstring{PlotVector()}{PlotVector()}}
+{\footnotesize\ttfamily void Display\+Manager\+::\+Plot\+Vector (\begin{DoxyParamCaption}\item[{const char \texorpdfstring{$\ast$}{*}}]{label,  }\item[{const std\+::vector$<$ float $>$ \&}]{values }\end{DoxyParamCaption})}
+
+
+
+Custom IO function, that plots the measurement vector. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em label} & The corresponding label of the Plot \\
+\hline
+{\em values} & The measurement vector that is plotted \\
+\hline
+\end{DoxyParams}

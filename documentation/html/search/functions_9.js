@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['main_0',['main',['../main_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;main.cpp'],['../main__server_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4',1,'main():&#160;main_server.cpp']]],
-  ['make_5fbytes_1',['make_bytes',['../definitions_8h.html#ac983c48834d285bf781579dd0adea202',1,'definitions.h']]]
+  ['receive_0',['Receive',['../class_socket_client.html#afdfed263518601d2b48abf6bb070cfab',1,'SocketClient']]],
+  ['receive_5fstate_1',['Receive_State',['../class_receive___state.html#a5448ec636f4ea86aad1c2ffc6520d3b2',1,'Receive_State']]],
+  ['recvfrom_2',['RecvFrom',['../class_u_d_p_socket.html#ae14d059981edd54ea45378687ba0861f',1,'UDPSocket']]],
+  ['run_3',['run',['../class_display_application.html#a7a9a8917375da6205ed588d67868d8b8',1,'DisplayApplication']]]
 ];

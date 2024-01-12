@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['idlabel_0',['IDLabel',['../struct_i_d_label.html',1,'']]]
+  ['udpsocket_0',['UDPSocket',['../class_u_d_p_socket.html',1,'']]]
 ];

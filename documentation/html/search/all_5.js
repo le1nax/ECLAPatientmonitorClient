@@ -1,11 +1,6 @@
 var searchData=
 [
-  ['floattype_5fnan_0',['FLOATTYPE_NAN',['../definitions_8h.html#acd88919e9450a9560020b628c68fef59',1,'definitions.h']]],
-  ['floattype_5fnegative_5finfinity_1',['FLOATTYPE_NEGATIVE_INFINITY',['../definitions_8h.html#a40541850a1a2ccc344cb893f87d43ab1',1,'definitions.h']]],
-  ['floattype_5fnres_2',['FLOATTYPE_NRes',['../definitions_8h.html#a1d5b7e26641b5277f0e121179596d612',1,'definitions.h']]],
-  ['floattype_5fpositive_5finfinity_3',['FLOATTYPE_POSITIVE_INFINITY',['../definitions_8h.html#aa266c6489df516f02cf2a053589543bf',1,'definitions.h']]],
-  ['floattypetovalue_4',['FloattypeToValue',['../definitions_8h.html#a34fdca4b4049124634c19eaa6b035efb',1,'definitions.h']]],
-  ['formattm_5',['formatTm',['../definitions_8h.html#a029b22b1e6c1bd4cdae890f7afd3e1c1',1,'definitions.h']]],
-  ['fraction_6',['fraction',['../struct_absolute_time.html#aa09ed181646f518cfe40ef7715ca262f',1,'AbsoluteTime']]],
-  ['functional_5funits_7',['functional_units',['../struct_mdse_user_info_std.html#a2a2472aea62c68bef2ca46146ed9bf58',1,'MdseUserInfoStd']]]
+  ['init_5fmsg_0',['init_msg',['../class_socket_client.html#a6b894a72da480a6ec4361a630993453b',1,'SocketClient']]],
+  ['initreceive_1',['initReceive',['../class_socket_client.html#acb57ced432d6c24dbc5ad3d021f62861',1,'SocketClient']]],
+  ['initwindow_2',['initWindow',['../class_display_manager.html#ab019a8cce8c5f31d6bfd6b84837cbcb4',1,'DisplayManager']]]
 ];

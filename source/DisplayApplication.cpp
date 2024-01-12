@@ -5,7 +5,6 @@
 #include "../include/definitions.h"
 
 //PCANModule includes
-#include "../PCANModule/DataManager.h"
 #include "../PCANModule/DataPoint.h"
 #include "../include/DisplayManager.h"
 #include "../include/SocketClient.h"
@@ -19,13 +18,12 @@
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 
-#define LOCALIP "134.61.68.44"
+#define LOCALIP "127.0.0.1"
 #define LOCALPORT 12345
 
 
 DisplayApplication::DisplayApplication() 
 {
-    
 //     setCallback(std::bind(&DisplayManager::onPressureChanged, dispManager, std::placeholders::_1));
 }
 

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['get_5frtsa_5fprio_5fmsg_0',['get_rtsa_prio_msg',['../class_socket_client.html#ac84436f8ec29e8e157351808ca1d499a',1,'SocketClient']]]
+  ['numbytesreceived_0',['numBytesReceived',['../class_receive___state.html#a83fe4f7e48aafe993c220a01cdf43c39',1,'Receive_State']]],
+  ['numbytestransferred_1',['numBytesTransferred',['../class_receive___state.html#a8f326890bd357419138344df156898a4',1,'Receive_State']]]
 ];

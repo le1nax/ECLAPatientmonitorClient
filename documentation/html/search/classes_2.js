@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['glbhandle_0',['GlbHandle',['../struct_glb_handle.html',1,'']]]
+  ['socketclient_0',['SocketClient',['../class_socket_client.html',1,'']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['floattypetovalue_0',['FloattypeToValue',['../definitions_8h.html#a34fdca4b4049124634c19eaa6b035efb',1,'definitions.h']]],
-  ['formattm_1',['formatTm',['../definitions_8h.html#a029b22b1e6c1bd4cdae890f7afd3e1c1',1,'definitions.h']]]
+  ['initreceive_0',['initReceive',['../class_socket_client.html#acb57ced432d6c24dbc5ad3d021f62861',1,'SocketClient']]],
+  ['initwindow_1',['initWindow',['../class_display_manager.html#ab019a8cce8c5f31d6bfd6b84837cbcb4',1,'DisplayManager']]]
 ];

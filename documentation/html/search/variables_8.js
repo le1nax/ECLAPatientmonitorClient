@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['keep_5falive_5fmsg_0',['keep_alive_msg',['../class_socket_client.html#a86bec6b625272160bdc141e7d93a4a50',1,'SocketClient']]],
-  ['keep_5falive_5fmsg2_1',['keep_alive_msg2',['../class_socket_client.html#a29ada0aeb49d140548909b0c73f89b91',1,'SocketClient']]]
+  ['sock_0',['sock',['../class_u_d_p_socket.html#a70085ad4b4b8c09258f206843db08de2',1,'UDPSocket']]],
+  ['state_5fip_1',['state_ip',['../class_receive___state.html#aab2eabd11f0cd87103752461e6799483',1,'Receive_State']]]
 ];
