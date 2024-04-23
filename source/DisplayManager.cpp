@@ -247,7 +247,6 @@ void DisplayManager::glfwMainLoop()
 
             if (ImGui::Button("connect")) {
                 receiveThread = std::make_unique<std::thread>(&DisplayApplication::connect, appInstance, inputIp, inputPort);
-                //appInstance->connect();
             }
             ImGui::EndTabItem();
         }
