@@ -1,7 +1,12 @@
 #include "../include/DisplayManager.h"
+#include "../include/DisplayApplication.h"
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+
+#define LOCALIP "127.0.0.1"
+#define LOCALPORT 12345
+
 // #include <mat.h>
 
 DisplayManager::DisplayManager()
@@ -22,6 +27,7 @@ void DisplayManager::initWindow()
     displayWindowThread = std::make_unique<std::thread>(&DisplayManager::DisplayThread, this);
 }
 
+/// @todo Config Datei auslesen und Dateninterpretation anpassen 
 void DisplayManager::onPressureChanged(const DataPointEncoded& dataPointReceived)
 {
     float readData = dataPointReceived.value;
@@ -29,13 +35,30 @@ void DisplayManager::onPressureChanged(const DataPointEncoded& dataPointReceived
     {
     case EnumCanID::PRESS:
         m_BPData_mBar.push_back(readData*canPressConversionFactor);
+        if(m_CyclicBPData_mBar.size() < maxNumberOfPressValues){
+            m_CyclicBPData_mBar.push_back(readData*canPressConversionFactor);
+            break;
+        }
+        //else: Reset Cyclic Plot Vector
+        m_CyclicBPData_mBar.clear();
+        m_CyclicBPData_mBar.push_back(readData*canPressConversionFactor);
         break;
     case EnumCanID::TEMP:
         m_TempData_Celsius.push_back(readData*canTempConversionFactor);
+        if(m_CyclicBPData_mBar.size() < maxNumberOfPressValues){
+            m_CyclicTempData_Celsius.push_back(readData*canTempConversionFactor);
+            break;
+        }
+        //else: Reset Cyclic Plot Vector
+        m_CyclicBPData_mBar.clear();
+        m_CyclicTempData_Celsius.push_back(readData*canTempConversionFactor);
         break;
+    ///@todo
     case EnumCanID::SFM3300:
         m_FlowData_mBar.push_back(readData*canPressConversionFactor);
+        m_CyclicFlowData_mBar.push_back(readData*canPressConversionFactor);
 
+    ///@todo default case definieren
     default:
         std::cout <<  "Invalid canID: " << dataPointReceived.canID << std::endl;
         break;
@@ -72,7 +95,11 @@ void DisplayManager::writeCSV(const std::string& filename, const std::vector<std
     std::cout <<  "CSV file created: " << filename << std::endl;
 }
 
-void convertToMat(const std::string& csvFilename, const std::string& matFilename) {
+void DisplayManager::setAppInstance(DisplayApplication* instanceA) {
+        appInstance = instanceA;
+    }
+
+void DisplayManager::convertToMat(const std::string& csvFilename, const std::string& matFilename) {
 
     // std::ifstream csvFile(csvFilename);
     // std::string line;
@@ -113,7 +140,6 @@ void convertToMat(const std::string& csvFilename, const std::string& matFilename
 }
 
 
-
 void DisplayManager::DisplayThread()
 {
     glfwSetErrorCallback(glfw_error_callback);
@@ -137,6 +163,7 @@ void DisplayManager::DisplayThread()
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
     ImGui::StyleColorsDark();
@@ -146,23 +173,7 @@ void DisplayManager::DisplayThread()
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        ImGui::Begin("Plot BP");
-
-        PlotVector("BP [mBar]", m_BPData_mBar);
-        PlotVector("Temperature [°C]", m_TempData_Celsius);
-
-        if (ImGui::Button("Export Data to .csv and .mat")) {
-            writeCSV("measurements.csv", measurementsVec);
-            convertToMat("measurements.csv", "measurements.mat");
-        }
-
-        ImGui::End();//end window
+        glfwMainLoop();
 
         ImGui::Render();
         glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
@@ -175,16 +186,79 @@ void DisplayManager::DisplayThread()
     // Cleanup
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
     glfwTerminate();
 }
 
-
-void DisplayManager::PlotVector(const char* label, const std::vector<float>& values) {
-    
-    ImGui::PlotLines(label, values.data(), static_cast<int>(values.size()), 0, nullptr, FLT_MIN, FLT_MAX, ImVec2(0, 80));
+void DisplayManager::PlotVector(const char* label, std::vector<float>& values, int64_t yLowerLimit, int64_t yUpperLimit) {
+    // values.resize(maxNumberOfPressValues, 0.0f);
+    if (ImPlot::BeginPlot(label, NULL, NULL, ImVec2(800, 300))) {
+        ImPlotAxisFlags plotFlags = ImPlotAxisFlags_NoGridLines;
+        ImPlot::SetupAxesLimits(0, maxNumberOfPressValues, yLowerLimit, yUpperLimit);
+        ImPlot::SetupAxis(ImAxis_X1, "Sample Point", plotFlags);
+        ImPlot::SetupAxis(ImAxis_Y1, label);
+        ImPlot::PlotLine(label, values.data(), static_cast<int>(values.size()), 1.0, 0.0, ImPlotFlags_NoLegend);
+        // auto size = values.size();
+        ImPlot::EndPlot();
+    }
+    else{
+        std::cout << "Could not Plot vector: " + std::string(label) << std::endl;
+    }
 }
 
+void DisplayManager::glfwMainLoop()
+{
+    glfwPollEvents();
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Begin("PatientMonitorClient", NULL, ImGuiWindowFlags_AlwaysAutoResize);
+
+    if (ImGui::BeginTabBar("Client")) {
+
+        if (ImGui::BeginTabItem("Monitor")) {
+            // Content of Tab 1
+            PlotVector("BP [mBar]", m_CyclicBPData_mBar, lowestCanPressValue, highestCanPressValue);
+
+            PlotVector("Temperature [°C]", m_CyclicTempData_Celsius, lowestCanTemperatureValue, highestCanTemperatureValue);
+
+            if (ImGui::Button("Export Data to .csv and .mat")) {
+                writeCSV("measurements.csv", measurementsVec);
+                convertToMat("measurements.csv", "measurements.mat");
+            }
+            ImGui::EndTabItem();
+        }
+
+        if (ImGui::BeginTabItem("Config")) {
+            // Content of Tab 2
+            static char inputBufferIp[128] = "";
+            static char inputBufferPort[128] = "";
+
+            ImGui::Text("Server IP");
+            ImGui::InputTextWithHint("##serverIp", "Enter server ip", inputBufferIp, IM_ARRAYSIZE(inputBufferIp));
+            ImGui::SameLine();
+            ImGui::Text("Server Port");
+            ImGui::InputTextWithHint("##serverPort", "Enter server port", inputBufferPort, IM_ARRAYSIZE(inputBufferPort));
+
+            std::string inputIp = inputBufferIp; 
+            unsigned short inputPort = static_cast<unsigned short>(std::strtoul(inputBufferPort, nullptr, 10));
+
+            if (ImGui::Button("connect")) {
+                receiveThread = std::make_unique<std::thread>(&DisplayApplication::connect, appInstance, inputIp, inputPort);
+                //appInstance->connect();
+            }
+            ImGui::EndTabItem();
+        }
+
+        // Add more tabs as needed
+
+        ImGui::EndTabBar(); // End the tab bar
+    }
+
+    ImGui::End();//end window
+}
 
 DisplayManager::~DisplayManager()
 {

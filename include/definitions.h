@@ -35,6 +35,18 @@ static constexpr size_t counterbuffersize = beaconbuffersize;
 static constexpr double canPressConversionFactor = 1e-2;
 /// @brief conversion factor of the payload value, used for HW Temperature
 static constexpr double canTempConversionFactor = 1e-2;
+/// @brief maximum number of displayable Pressure values, before the display resets (cyclic plot)
+static constexpr size_t maxNumberOfPressValues = 10000;
+/// @brief maximum number of displayable Temperature values, before the display resets (cyclic plot)
+static constexpr size_t maxNumberOfTemperatureValues = 10000;
+/// @brief lowest displayable plot value for Honeywell Pressure Value
+static constexpr int64_t lowestCanPressValue = -1500;
+/// @brief highest displayable plot value for Honeywell Pressure Value
+static constexpr int64_t highestCanPressValue = 1500;
+/// @brief lowest displayable plot value for Honeywell Temperature Value
+static constexpr int64_t lowestCanTemperatureValue = -10;
+/// @brief highest displayable plot value for Honeywell Temperature Value
+static constexpr int64_t highestCanTemperatureValue = 50;
 
 /// @brief Enum class defining the type of a DataPoint
 enum class DataPointType 

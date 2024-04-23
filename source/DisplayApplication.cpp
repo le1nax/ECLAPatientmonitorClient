@@ -6,8 +6,6 @@
 
 //PCANModule includes
 #include "../PCANModule/DataPoint.h"
-#include "../include/DisplayManager.h"
-#include "../include/SocketClient.h"
 
 #include <thread>
 
@@ -21,58 +19,67 @@
 #define LOCALIP "127.0.0.1"
 #define LOCALPORT 12345
 
-
 DisplayApplication::DisplayApplication() 
 {
-//     setCallback(std::bind(&DisplayManager::onPressureChanged, dispManager, std::placeholders::_1));
+//     setCallback(std::bind(&DisplayManager::onPressureChanged, m_dispManager, std::placeholders::_1));
+}
+
+void DisplayApplication::connect(const std::string& s_remoteIP, unsigned short remotePort)
+{
+    try
+    {
+        ///connect with m_client udp
+        std::unique_ptr<WSASession> Session = std::make_unique<WSASession>();
+        //m_client = std::make_unique<SocketClient>(s_remoteIP, remotePort);
+        m_client = std::make_unique<SocketClient>(s_remoteIP, remotePort);
+        m_client->establishLanConnection();
+        if(configModeDebug) {
+             std::cout << "sent association Request" << std::endl;
+        }
+        ///@todo receive and handle association answer
+        startReceive();
+        //appReceiveThread = std::make_unique<std::thread>(&DisplayApplication::startReceive, this);
+    }
+    catch (std::exception &ex) 
+    {
+        if(configModeDebug) { 
+            std::cout << ex.what();  
+        }
+    }
+
 }
 
 void DisplayApplication::run()
 {
-    try
-    {
-        std::unique_ptr<WSASession> Session = std::make_unique<WSASession>();
-        DisplayManager dispManager;
+    //init Display Manager
+    m_dispManager = std::make_unique<DisplayManager>();
+    m_dispManager->setAppInstance(this);
+    m_dispManager->initWindow();
+}
 
-        const std::string s_remoteIP = LOCALIP;
-        const unsigned short remotePort = LOCALPORT;
-        std::unique_ptr<SocketClient> client = std::make_unique<SocketClient>(s_remoteIP, remotePort);
+void DisplayApplication::stopReceive()
+{
+    flagReceiving = false;
+}
 
-        client->establishLanConnection();
-        if(configModeDebug) {
-             std::cout << "sent" << std::endl;
-        }
-        // std::cin.get();// Wait for user input before exiting
-        dispManager.initWindow();
-        char* buffer;
-        if(configModeDebug) { 
-            std::cout << "begin receive" << std::endl;
-        }
-
-        while(true)
+void DisplayApplication::startReceive()
+{
+    flagReceiving = true;
+    char* buffer;
+    while(flagReceiving)
         {
-            buffer = client->Receive(buffer, size_encoded);
+            if(configModeDebug) { 
+                std::cout << "begin receive" << std::endl;
+            }
+            buffer = m_client->Receive(buffer, size_encoded);
             //swapEndianness(buffer, size_encoded);
             DataPointEncoded encoded;
             int32_t valDebug;
             memcpy(&encoded, buffer, size_encoded);
-            // if(configModeDebug) { std::cout << "canID extracted: " << int(encoded.canID) << std::endl;
-            // if(configModeDebug) { std::cout << "timestamp extracted: " << int(encoded.timestamp) << std::endl;   
-            // if(configModeDebug) { std::cout << "value extracted: " << int(encoded.value) << std::endl;
             if(configModeDebug) { 
                 std::cout << "pcantime extracted: " << std::to_string(encoded.pcanTimestamp) << std::endl;  
             }
             // if(configModeDebug) { std::cout << "value extracted: " << valDebug << std::endl;
-            dispManager.onPressureChanged(encoded);
+            m_dispManager->onPressureChanged(encoded); /// slot that handles incoming data
         }
-    }
-    catch (std::exception &ex) //catch any occurring system errors
-    {
-        if(configModeDebug) { 
-            std::cout << ex.what();  //print error message
-        }
-    }
-	if(configModeDebug) { 
-        std::cout << "return to main end" << std::endl;
-    }
 }

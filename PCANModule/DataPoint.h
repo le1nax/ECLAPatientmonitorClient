@@ -8,6 +8,7 @@
 
 
 /// @brief DataStruct holding the information that is sent via udp
+/// @todo include beacon timestamp
 struct DataPointEncoded
 {
 	/// @brief the canID that is read by the PCAN USB Adapter

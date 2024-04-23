@@ -2,9 +2,12 @@
 
 #include <memory>
 #include <functional>
+#include "DisplayManager.h"
+#include "SocketClient.h"
+
 
 class DataPoint;
-class DisplayManager;
+
 
 
 class DisplayApplication{
@@ -12,6 +15,9 @@ class DisplayApplication{
     public:
         DisplayApplication();
         void run();
+        void connect(const std::string& s_remoteIP, unsigned short remotePort); 
+
+        void stopReceive();
 
         //  // Define a callback type using std::function
         // using CallbackType = std::function<void(const DataPointEncoded&)>;
@@ -29,6 +35,10 @@ class DisplayApplication{
     // }
     private: 
         // CallbackType callback_;
-        // std::unique_ptr<DisplayManager> dispManager;
-    
+        std::unique_ptr<DisplayManager> m_dispManager{};
+        std::unique_ptr<SocketClient> m_client{};
+        std::unique_ptr<std::thread> appReceiveThread {nullptr};
+        bool flagReceiving = true;
+        void startReceive();  
+
 };
