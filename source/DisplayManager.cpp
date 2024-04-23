@@ -251,8 +251,6 @@ void DisplayManager::glfwMainLoop()
             ImGui::EndTabItem();
         }
 
-        // Add more tabs as needed
-
         ImGui::EndTabBar(); // End the tab bar
     }
 
