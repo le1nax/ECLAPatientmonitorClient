@@ -47,6 +47,8 @@ static constexpr int64_t highestCanPressValue = 1500;
 static constexpr int64_t lowestCanTemperatureValue = -10;
 /// @brief highest displayable plot value for Honeywell Temperature Value
 static constexpr int64_t highestCanTemperatureValue = 50;
+///@brief number of can ids in cache
+static constexpr uint16_t numberOfCanIdsInCache = 8;
 
 /// @brief Enum class defining the type of a DataPoint
 enum class DataPointType 

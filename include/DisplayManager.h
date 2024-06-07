@@ -6,6 +6,11 @@
 //PCANModule includes
 #include "../PCANModule/DataPoint.h"
 
+#include "../ParseECLA/IdManager.h"
+#include "../ParseECLA/LRUCache.hpp"
+
+#include "MeasurementVector.h"
+
 #include <thread>
 
 #include <vector>
@@ -42,17 +47,20 @@ class DisplayManager {
 
         ///@brief initializes appInstance
         void setAppInstance(DisplayApplication* instanceA);
+
+        /// @brief set can id Cache capacity (number of canid values saved)
+        void setLRUCacheCapacity(uint8_t capacity);
         
         /// @brief Custom IO function, that plots the measurement vector 
         /// @param label The corresponding label of the Plot
         /// @param values The measurement vector that is plotted
         /// @param yLowerLimit lowest displayable plot value
         /// @param yUpperLimit highest displayable plot value
-        void PlotVector(const char* label, std::vector<float>& values, int64_t yLowerLimit, int64_t yUpperLimit);
+        void PlotVector(const char* label, std::vector<float> values, int64_t yLowerLimit, int64_t yUpperLimit);
 
         /// @brief The slot which handles the incoming DataPoint
         /// @param dataPointReceived Encoded DataPoint that is handled
-        void onPressureChanged(const DataPointEncoded& dataPointReceived);
+        void handleDataPoints(const DataPointEncoded& dataPointReceived);
 
         virtual ~DisplayManager();
 
@@ -65,15 +73,18 @@ class DisplayManager {
         /// @brief Creates a CSV file with the Measurements in each column
         /// @param filename The Filename of the created csv file
         /// @param measurements The vector of the measurements
-        void writeCSV(const std::string& filename, const std::vector<std::vector<float>*>& measurements);
+        void writeCSV(const std::string& filename, const std::vector<MeasurementVector>& measurements);
 
         void convertToMat(const std::string& csvFilename, const std::string& matFilename);
 
         /// @brief App instance, that performs the connection establishment
         DisplayApplication* appInstance = nullptr;
 
-        /// @brief Measurements are stored in std::vectors which are stored in a std::vector measurementsVec. It is filled on runtime on runtime
-        std::vector<std::vector<float>*> measurementsVec = {};
+        /// @brief Measurements are stored in std::vectors which are stored in a std::vector measurementsVec. It is filled on runtime
+        std::vector<MeasurementVector> m_measurementsVec = {};
+
+        /// @brief Maps the measurementsVec index (arg2) to CanIDs (arg 1)
+        std::unordered_map<int, size_t> measurementsCanIDs2VecIndex;
 
         /// @brief The measurements of Honeywell pressure
         std::vector<float> m_BPData_mBar = {};
@@ -91,6 +102,15 @@ class DisplayManager {
 
         /// @brief thread, that displays the ImGui Window
         std::unique_ptr<std::thread> displayWindowThread {nullptr};
+
+        ///@brief IdManager reading the SmartECLA config
+        std::unique_ptr<IdManager> idMan{nullptr};
+
+        ///@brief hashmap holding can_ids with IdType
+        std::unordered_map<int, Id*> canHashMap;
+
+        ///@brief Can Id Cache, used in signal handle of incoming measurements
+        LRUCache<int, Id> lruCache;
         
         std::unique_ptr<std::thread> receiveThread {nullptr};
         //debug Value

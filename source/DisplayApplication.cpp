@@ -21,7 +21,7 @@
 
 DisplayApplication::DisplayApplication() 
 {
-//     setCallback(std::bind(&DisplayManager::onPressureChanged, m_dispManager, std::placeholders::_1));
+//     setCallback(std::bind(&DisplayManager::handleDataPoints, m_dispManager, std::placeholders::_1));
 }
 
 void DisplayApplication::connect(const std::string& s_remoteIP, unsigned short remotePort)
@@ -80,6 +80,6 @@ void DisplayApplication::startReceive()
                 std::cout << "pcantime extracted: " << std::to_string(encoded.pcanTimestamp) << std::endl;  
             }
             // if(configModeDebug) { std::cout << "value extracted: " << valDebug << std::endl;
-            m_dispManager->onPressureChanged(encoded); /// slot that handles incoming data
+            m_dispManager->handleDataPoints(encoded); /// slot that handles incoming data
         }
 }

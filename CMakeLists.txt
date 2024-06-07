@@ -14,8 +14,10 @@ set(VCPKG_HOST_TRIPLET "x64-mingw-static")
 # C++ standard to use.
 set(CXX_STANDARD 17)
 
+
 #set module path
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+
 
 # Name of your project.
 project(BasicGui CXX)
@@ -31,7 +33,7 @@ find_package(OpenGL)
 # find_package(Matlab REQUIRED)
 # include_directories(${Matlab_INCLUDE_DIRS})
 
-file(GLOB_RECURSE SOURCE_FILES "source/*.cpp" "PCANModule/*.cpp")
+file(GLOB_RECURSE SOURCE_FILES "source/*.cpp" "PCANModule/*.cpp" "ParseECLA/*.cpp")
 add_executable(ECLA_PM "main.cpp" ${SOURCE_FILES})
 # pkg_check_modules(DEPS REQUIRED sigc++-3.0) 
 # include_directories(${DEPS_INCLUDE_DIRS})
@@ -54,5 +56,7 @@ if (imgui_FOUND)
 else()
   message(FATAL_ERROR "imgui library not found.")
 endif()
+target_link_libraries(ECLA_PM ${CPP_CLI_WRAPPER_PATH})
+
 
 set(CMAKE_INSTALL_RPATH "$ORIGIN") # Sets the RPATH to search for DLLs in the same directory as the executable.

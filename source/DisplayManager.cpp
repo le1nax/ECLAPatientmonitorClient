@@ -9,12 +9,14 @@
 
 // #include <mat.h>
 
-DisplayManager::DisplayManager()
+DisplayManager::DisplayManager() : lruCache(numberOfCanIdsInCache)
 {
+    idMan = std::make_unique<IdManager>("../ParseECLA/SmartECLA_IDs.h");
+    canHashMap = idMan->getIdDict();
     //add every measurement stream to vector
-    measurementsVec.push_back(&m_BPData_mBar);
-    measurementsVec.push_back(&m_TempData_Celsius);
-    measurementsVec.push_back(&m_FlowData_mBar);
+    // measurementsVec.push_back(&m_BPData_mBar);
+    // measurementsVec.push_back(&m_TempData_Celsius);
+    // measurementsVec.push_back(&m_FlowData_mBar);
     
 }
 
@@ -27,46 +29,86 @@ void DisplayManager::initWindow()
     displayWindowThread = std::make_unique<std::thread>(&DisplayManager::DisplayThread, this);
 }
 
-/// @todo Config Datei auslesen und Dateninterpretation anpassen 
-void DisplayManager::onPressureChanged(const DataPointEncoded& dataPointReceived)
+void DisplayManager::setLRUCacheCapacity(uint8_t capacity)
 {
-    float readData = dataPointReceived.value;
-    switch (static_cast<EnumCanID>(dataPointReceived.canID))
-    {
-    case EnumCanID::PRESS:
-        m_BPData_mBar.push_back(readData*canPressConversionFactor);
-        if(m_CyclicBPData_mBar.size() < maxNumberOfPressValues){
-            m_CyclicBPData_mBar.push_back(readData*canPressConversionFactor);
-            break;
-        }
-        //else: Reset Cyclic Plot Vector
-        m_CyclicBPData_mBar.clear();
-        m_CyclicBPData_mBar.push_back(readData*canPressConversionFactor);
-        break;
-    case EnumCanID::TEMP:
-        m_TempData_Celsius.push_back(readData*canTempConversionFactor);
-        if(m_CyclicBPData_mBar.size() < maxNumberOfPressValues){
-            m_CyclicTempData_Celsius.push_back(readData*canTempConversionFactor);
-            break;
-        }
-        //else: Reset Cyclic Plot Vector
-        m_CyclicBPData_mBar.clear();
-        m_CyclicTempData_Celsius.push_back(readData*canTempConversionFactor);
-        break;
-    ///@todo
-    case EnumCanID::SFM3300:
-        m_FlowData_mBar.push_back(readData*canPressConversionFactor);
-        m_CyclicFlowData_mBar.push_back(readData*canPressConversionFactor);
+    lruCache.setCapacity(capacity);
+}
 
-    ///@todo default case definieren
-    default:
-        std::cout <<  "Invalid canID: " << dataPointReceived.canID << std::endl;
-        break;
+/// @todo Config Datei auslesen und Dateninterpretation anpassen 
+void DisplayManager::handleDataPoints(const DataPointEncoded& dataPointReceived)
+{
+    auto receivedCanId = dataPointReceived.canID;
+    Id* idStructPtr = lruCache.get(receivedCanId);
+    if (idStructPtr) {
+        // Found in cache, search for index
+        auto it = measurementsCanIDs2VecIndex.find(receivedCanId);
+        if (it != measurementsCanIDs2VecIndex.end()) {
+            // Add measurement data to the corresponding MeasurementVector
+            m_measurementsVec[it->second].addMeasurement(dataPointReceived.value);
+        } else {
+            throw std::runtime_error("Index not found in measurementsCanIDs2VecIndex for canId: " + std::to_string(dataPointReceived.canID));
+        }
+    } else {
+        // search in canHashMap
+        auto it = canHashMap.find(receivedCanId);
+        if (it != canHashMap.end()) {
+            // Found in canHashMap
+    
+            MeasurementVector newMeasurementVector(*it->second);
+            newMeasurementVector.addMeasurement(dataPointReceived.value);
+
+            //add to LRUCache
+            lruCache.put(receivedCanId, *it->second);
+            
+            //add to m_measurementsVec
+            ///@todo Abfrage imGUI
+            m_measurementsVec.push_back(newMeasurementVector);
+            size_t newIndex = m_measurementsVec.size() - 1;
+
+            //add index to measurementsCanIDs2VecIndex
+            measurementsCanIDs2VecIndex[receivedCanId] = newIndex;
+        } else {
+            //if canId not found in canHashMap
+            throw std::runtime_error("canId not found in canHashMap: " + std::to_string(receivedCanId));
+        }
     }
+    // float readData = dataPointReceived.value;
+    // switch (static_cast<EnumCanID>(dataPointReceived.canID))
+    // {
+    // case EnumCanID::PRESS:
+    //     m_BPData_mBar.push_back(readData*canPressConversionFactor);
+    //     if(m_CyclicBPData_mBar.size() < maxNumberOfPressValues){
+    //         m_CyclicBPData_mBar.push_back(readData*canPressConversionFactor);
+    //         break;
+    //     }
+    //     //else: Reset Cyclic Plot Vector
+    //     m_CyclicBPData_mBar.clear();
+    //     m_CyclicBPData_mBar.push_back(readData*canPressConversionFactor);
+    //     break;
+    // case EnumCanID::TEMP:
+    //     m_TempData_Celsius.push_back(readData*canTempConversionFactor);
+    //     if(m_CyclicBPData_mBar.size() < maxNumberOfPressValues){
+    //         m_CyclicTempData_Celsius.push_back(readData*canTempConversionFactor);
+    //         break;
+    //     }
+    //     //else: Reset Cyclic Plot Vector
+    //     m_CyclicBPData_mBar.clear();
+    //     m_CyclicTempData_Celsius.push_back(readData*canTempConversionFactor);
+    //     break;
+    // ///@todo
+    // case EnumCanID::SFM3300:
+    //     m_FlowData_mBar.push_back(readData*canPressConversionFactor);
+    //     m_CyclicFlowData_mBar.push_back(readData*canPressConversionFactor);
+
+    // ///@todo default case definieren
+    // default:
+    //     std::cout <<  "Invalid canID: " << dataPointReceived.canID << std::endl;
+    //     break;
+    // }
 }
 
 
-void DisplayManager::writeCSV(const std::string& filename, const std::vector<std::vector<float>*>& data) {
+void DisplayManager::writeCSV(const std::string& filename, const std::vector<MeasurementVector>& data) {
 
     std::ofstream file(filename);
     if (!file.is_open()) {
@@ -77,15 +119,15 @@ void DisplayManager::writeCSV(const std::string& filename, const std::vector<std
     // get min size
     size_t minSize = std::numeric_limits<size_t>::max();
     for (const auto& vec : data) {
-        minSize = std::min(minSize, vec->size());
+        minSize = std::min(minSize, vec.getMeasurements().size());
     }
 
     for (size_t i = 0; i < minSize; ++i) {
         for (const auto& vec : data) {
             if(configModeDebug){ 
-                std::cout <<  "rowValue: " << vec->at(i) << std::endl;
+                std::cout <<  "rowValue: " << vec.getMeasurements().at(i) << std::endl;
             }
-            file << vec->at(i) << ","; //write content of vec into csv
+            file << vec.getMeasurements().at(i) << ","; //write content of vec into csv
         }
         file << "\n"; // next row
     }
@@ -191,7 +233,7 @@ void DisplayManager::DisplayThread()
     glfwTerminate();
 }
 
-void DisplayManager::PlotVector(const char* label, std::vector<float>& values, int64_t yLowerLimit, int64_t yUpperLimit) {
+void DisplayManager::PlotVector(const char* label, std::vector<float> values, int64_t yLowerLimit, int64_t yUpperLimit) {
     // values.resize(maxNumberOfPressValues, 0.0f);
     if (ImPlot::BeginPlot(label, NULL, NULL, ImVec2(800, 300))) {
         ImPlotAxisFlags plotFlags = ImPlotAxisFlags_NoGridLines;
@@ -220,12 +262,16 @@ void DisplayManager::glfwMainLoop()
 
         if (ImGui::BeginTabItem("Monitor")) {
             // Content of Tab 1
-            PlotVector("BP [mBar]", m_CyclicBPData_mBar, lowestCanPressValue, highestCanPressValue);
+            for(const auto& it : m_measurementsVec){
+                ///@todo abgleich mit xml inputs
+                PlotVector(it.name.c_str(), it.getCylclicMeasurements(), it.min, it.max);
+            }
+            // PlotVector("BP [mBar]", m_CyclicBPData_mBar, lowestCanPressValue, highestCanPressValue);
 
-            PlotVector("Temperature [°C]", m_CyclicTempData_Celsius, lowestCanTemperatureValue, highestCanTemperatureValue);
+            // PlotVector("Temperature [°C]", m_CyclicTempData_Celsius, lowestCanTemperatureValue, highestCanTemperatureValue);
 
             if (ImGui::Button("Export Data to .csv and .mat")) {
-                writeCSV("measurements.csv", measurementsVec);
+                writeCSV("measurements.csv", m_measurementsVec);
                 convertToMat("measurements.csv", "measurements.mat");
             }
             ImGui::EndTabItem();
@@ -238,7 +284,7 @@ void DisplayManager::glfwMainLoop()
 
             ImGui::Text("Server IP");
             ImGui::InputTextWithHint("##serverIp", "Enter server ip", inputBufferIp, IM_ARRAYSIZE(inputBufferIp));
-            ImGui::SameLine();
+
             ImGui::Text("Server Port");
             ImGui::InputTextWithHint("##serverPort", "Enter server port", inputBufferPort, IM_ARRAYSIZE(inputBufferPort));
 
